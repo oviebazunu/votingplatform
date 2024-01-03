@@ -20,7 +20,7 @@ const SplashPage = () => {
             </button>
           </Link>
         </div>
-        <Link href={"/"}>
+        <Link href={"/register"}>
           <button className="md:w-[369px] md:h-[90px] w-[200px] h-[50px] bg-button rounded-[20px] shadow-lg mb-3 hover:bg-[#D7DDE6] transition-colors duration-200 ease-in-out">
             Register
           </button>

@@ -52,7 +52,7 @@ const Register = () => {
     return passwordRegex.test(password);
   };
 
-  const calculateAge = (birthdate) => {
+  const calculateAge = (birthdate: Date) => {
     const today = new Date();
     const birthDate = new Date(birthdate);
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -165,8 +165,11 @@ const Register = () => {
           <DatePicker
             className="border-2 p-2"
             selected={user.dateOfBirth}
-            onChange={(date) => setUser({ ...user, dateOfBirth: date })}
+            onChange={(date: any) => setUser({ ...user, dateOfBirth: date })}
             placeholderText="Select your date of birth"
+            dateFormat="dd/MM/yyyy"
+            showYearDropdown
+            scrollableYearDropdown
           />
         </div>
         <div className="flex flex-col mb-4">
