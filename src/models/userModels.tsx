@@ -24,7 +24,8 @@ const userSchema = new mongoose.Schema({
   },
   uvc: {
     type: String,
-    require: [true, "Please enter your UVC code."],
+    require: [true, "Please enter your unique UVC code"],
+    unique: true,
   },
   isVerified: {
     type: Boolean,

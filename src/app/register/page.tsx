@@ -14,10 +14,12 @@ const Register = () => {
 
   const [user, setUser] = React.useState({
     email: "",
-    password: "",
     fullname: "",
-    confirmPassword: "",
     dateOfBirth: null,
+    password: "",
+    confirmPassword: "",
+    constituency: "",
+    uvc: "",
   });
 
   const [passwordsMatch, setPasswordsMatch] = useState(true);
@@ -108,7 +110,7 @@ const Register = () => {
         }
       }
     } catch (error: any) {
-      console.log("Failed to Register", error.message);
+      console.log("Failed to Register", error.response);
       toast.error("Failed to register. Please try again");
     }
   };
@@ -171,6 +173,28 @@ const Register = () => {
             showYearDropdown
             scrollableYearDropdown
           />
+        </div>
+        <div className="flex flex-col mb-4">
+          <label htmlFor="constituency" className="mb-2">
+            Constituency:
+          </label>
+          <select
+            className="border-2 p-2"
+            id="constituency"
+            value={user.constituency}
+            onChange={(e) => {
+              setUser({ ...user, constituency: e.target.value });
+            }}
+          >
+            <option value="">Select Constituency</option>
+            <option value="Shangri-la-Town">Shangri-la-Town</option>
+            <option value="Northern-Kunlun-Mountain">
+              Northern-Kunlun-Mountain
+            </option>
+            <option value="Western-Shangri-la">Western-Shangri-la</option>
+            <option value="Naboo-Vallery">Naboo-Vallery</option>
+            <option value="New-Felucia">New-Felucia</option>
+          </select>
         </div>
         <div className="flex flex-col mb-4">
           <label htmlFor="password" className="mb-2">
