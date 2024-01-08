@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import QReader from "react-qr-code";
 
 const Register = () => {
   const router = useRouter();
@@ -75,7 +76,9 @@ const Register = () => {
       if (
         user.password === user.confirmPassword &&
         validateEmail(user.email) &&
-        validatePassword(user.password)
+        validatePassword(user.password) &&
+        //Checking if constituency is picked
+        user.constituency.trim() !== ""
       ) {
         //check if user is over 18
         const age = calculateAge(user.dateOfBirth);
@@ -84,9 +87,15 @@ const Register = () => {
           return;
         }
 
+        const uvcReponse = await axios.post("/api/users/uvcCode", {
+          uvcCode: user.uvc,
+        });
+
+        const { success, error } = uvcReponse.data;
+
         const response = await axios.post("/api/users/register", user);
 
-        //Added delay to the router push so notification would popup
+        // Added delay to the router push so the notification would popup
         toast.success("Registration Successful", {
           onClose: () => {
             setTimeout(() => {
@@ -107,6 +116,9 @@ const Register = () => {
 
         if (user.password !== user.confirmPassword) {
           setPasswordsMatch(false);
+        }
+        if (user.constituency.trim() === "") {
+          toast.error("Please select a constituency.");
         }
       }
     } catch (error: any) {
@@ -195,6 +207,22 @@ const Register = () => {
             <option value="Naboo-Vallery">Naboo-Vallery</option>
             <option value="New-Felucia">New-Felucia</option>
           </select>
+        </div>
+        <div className="flex flex-col mb-4">
+          <label htmlFor="uvc" className="mb-2">
+            UVC Code
+          </label>
+          <input
+            className="border-2 p-2"
+            id="uvc"
+            type="string"
+            value={user.uvc}
+            onChange={(e) => {
+              setUser({ ...user, uvc: e.target.value });
+              setValidEmail(true); // Reset the error state on change
+            }}
+            placeholder="Please enter your UVC Code"
+          />
         </div>
         <div className="flex flex-col mb-4">
           <label htmlFor="password" className="mb-2">
