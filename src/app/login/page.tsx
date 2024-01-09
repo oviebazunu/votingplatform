@@ -52,15 +52,6 @@ const login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="bg-white rounded-lg shadow-md md:w-[500px] mt-[10px] py-[50px] px-10 ">
-        <div
-          className="font-semibold text-white text-[35px] md:py-2 text-center leading-normal"
-          style={{
-            WebkitTextStroke: "1px #000000",
-            fontFamily: "Kanit-Semibold, Helvetica",
-          }}
-        >
-          <h1 className="text-stroke pb-2">ParkedByYou</h1>
-        </div>
         <h2 className="text-2xl text-center font-bold mb-6">Login</h2>
 
         <div className="flex flex-col mb-4">

@@ -8,7 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import QReader from "react-qr-code";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const Register = () => {
   const router = useRouter();
@@ -27,6 +28,16 @@ const Register = () => {
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
   const [validEmail, setValidEmail] = React.useState(true);
   const [validPassword, setValidPassword] = React.useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   //To check that the password, email and user length are the greater then 0 so the submit button works
   useEffect(() => {
@@ -224,14 +235,14 @@ const Register = () => {
             placeholder="Please enter your UVC Code"
           />
         </div>
-        <div className="flex flex-col mb-4">
+        <div className="flex flex-col mb-4 relative">
           <label htmlFor="password" className="mb-2">
             Password:
           </label>
           <input
             className="border-2 p-2"
             id="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={user.password}
             onChange={(e) => {
               setUser({ ...user, password: e.target.value });
@@ -239,6 +250,12 @@ const Register = () => {
             }}
             placeholder="Please enter your password"
           />
+          <button
+            className="absolute top-1/2 right-2 text-gray-500"
+            onClick={togglePasswordVisibility}
+          >
+            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+          </button>
           {!validPassword && (
             <p className="text-red-500">
               Password must have at least one capital letter, one lowercase
@@ -246,14 +263,14 @@ const Register = () => {
             </p>
           )}
         </div>
-        <div className="flex flex-col mb-4 w-full">
+        <div className="flex flex-col mb-4 relative">
           <label htmlFor="confirmPassword" className="mb-2">
             Confirm Password:
           </label>
           <input
             className={`border-2 p-2 ${passwordsMatch ? "" : "border-red-500"}`}
             id="confirmPassword"
-            type="password"
+            type={showConfirmPassword ? "text" : "password"}
             value={user.confirmPassword}
             onChange={(e) => {
               setUser({ ...user, confirmPassword: e.target.value });
@@ -261,6 +278,12 @@ const Register = () => {
             }}
             placeholder="Please confirm your password"
           />
+          <button
+            className="absolute top-1/2 right-2 text-gray-500"
+            onClick={toggleConfirmPasswordVisibility}
+          >
+            {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+          </button>
           {!passwordsMatch && (
             <p className="text-red-500">Passwords do not match</p>
           )}
