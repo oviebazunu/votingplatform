@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
     require: [true, "Please enter your unique UVC code"],
     unique: true,
   },
+  voted: {
+    type: Boolean,
+    default: false,
+  },
   isVerified: {
     type: Boolean,
     default: false,
