@@ -39,7 +39,7 @@ const login = () => {
       toast.success("Login Successful", {
         onClose: () => {
           setTimeout(() => {
-            router.push("/homepage");
+            router.push("/voterdashboard");
           }, 1500);
         },
       });

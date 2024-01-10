@@ -14,7 +14,7 @@ const SplashPage = () => {
           <h1>General Election Voting</h1>
         </div>
         <div>
-          <Link href={"/"}>
+          <Link href={"/login"}>
             <button className="md:w-[369px] md:h-[90px] w-[200px] h-[50px] bg-button rounded-[20px] shadow-lg mb-7 hover:bg-[#D7DDE6] transition-colors duration-200 ease-in-out">
               Login
             </button>
