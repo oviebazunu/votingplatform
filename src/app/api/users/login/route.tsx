@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
       id: user._id,
       username: user.username,
       email: user.email,
+      isAdmin: user.isAdmin,
     };
 
     //create token
@@ -43,6 +44,7 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json({
       message: "Login Sucessful",
       success: true,
+      isAdmin: user.isAdmin,
     });
 
     response.cookies.set("token", token, { httpOnly: true });

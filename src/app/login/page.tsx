@@ -32,34 +32,32 @@ const login = () => {
   }, [user]);
 
   const onLogin = async () => {
-    // Check for specific admin credentials
-    if (
-      user.email === "election@shangrila.gov.sr" &&
-      user.password === "shangrila2024$"
-    ) {
-      toast.success("Admin Login Successful", {
-        onClose: () => {
-          setTimeout(() => {
-            router.push("/admin"); // Redirect to admin page
-          }, 1500);
-        },
-      });
-    } else {
-      // Normal user login process
-      try {
-        const response = await axios.post("/api/users/login", user);
-        console.log("Login success", response.data);
-        toast.success("Login Successful", {
+    try {
+      const response = await axios.post("/api/users/login", user);
+      console.log("Login success", response.data);
+
+      // Check if the user is an admin and redirect to admin dashboard
+      if (response.data.isAdmin) {
+        toast.success("Admin Login Successful", {
           onClose: () => {
             setTimeout(() => {
-              router.push("/voterdashboard"); // Redirect to normal user dashboard
+              router.push("/admin");
             }, 1500);
           },
         });
-      } catch (error: any) {
-        console.log("Login failed", error.message);
-        toast.error("Login failed please try again.");
+      } else {
+        // Redirect to normal user dashboard added delay so notification pops up
+        toast.success("Login Successful", {
+          onClose: () => {
+            setTimeout(() => {
+              router.push("/voterdashboard");
+            }, 1500);
+          },
+        });
       }
+    } catch (error: any) {
+      console.log("Login failed", error.message);
+      toast.error("Login failed please try again.");
     }
   };
 

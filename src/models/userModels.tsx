@@ -8,9 +8,11 @@ const userSchema = new mongoose.Schema({
   },
   fullName: {
     type: String,
+    require: [true, "Please enter your full name"],
   },
   dateOfBirth: {
     type: Date,
+    require: [true, "Please enter your date of birth"],
   },
   password: {
     type: String,
