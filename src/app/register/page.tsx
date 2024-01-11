@@ -98,12 +98,6 @@ const Register = () => {
           return;
         }
 
-        const uvcReponse = await axios.post("/api/users/uvcCode", {
-          uvcCode: user.uvc,
-        });
-
-        const { success, error } = uvcReponse.data;
-
         const response = await axios.post("/api/users/register", user);
 
         // Added delay to the router push so the notification would popup
