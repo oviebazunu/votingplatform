@@ -8,11 +8,9 @@ const userSchema = new mongoose.Schema({
   },
   fullName: {
     type: String,
-    required: [true, "Please enter your full name"],
   },
   dateOfBirth: {
     type: Date,
-    required: [true, "Please enter your date of birth"],
   },
   password: {
     type: String,
@@ -20,11 +18,9 @@ const userSchema = new mongoose.Schema({
   },
   constituency: {
     type: String,
-    required: [true, "Please enter one of the constituencies "],
   },
   uvc: {
     type: String,
-    required: [true, "Please enter your unique UVC code"],
     unique: true,
   },
   voted: {

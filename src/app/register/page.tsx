@@ -10,6 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { QrReader } from "react-qr-reader";
 
 const Register = () => {
   const router = useRouter();
@@ -30,6 +31,7 @@ const Register = () => {
   const [validPassword, setValidPassword] = React.useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showQrReader, setShowQrReader] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -37,6 +39,21 @@ const Register = () => {
 
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const handleScan = (data) => {
+    if (data) {
+      setUser({ ...user, uvc: data });
+      setShowQrReader(false);
+    }
+  };
+
+  const handleError = (err) => {
+    console.error(err);
+  };
+
+  const toggleQrReader = () => {
+    setShowQrReader(!showQrReader);
   };
 
   //To check that the password, email and user length are the greater then 0 so the submit button works
@@ -228,6 +245,22 @@ const Register = () => {
             }}
             placeholder="Please enter your UVC Code"
           />
+          <button
+            onClick={toggleQrReader}
+            className={`md:w-[140px] md:h-[45px] w-[200px] h-[50px] bg-button rounded-[20px] shadow-lg  my-3 transition-colors duration-200 ease-in-out ${
+              showQrReader ? "bg-gray-300" : "bg-blue-500 hover:bg-blue-600"
+            } cursor-pointer`}
+          >
+            {showQrReader ? "Hide QR Reader" : "Scan QR Code"}
+          </button>
+          {showQrReader && (
+            <QrReader
+              delay={300}
+              onError={handleError}
+              onScan={handleScan}
+              style={{ width: "100%" }}
+            />
+          )}
         </div>
         <div className="flex flex-col mb-4 relative">
           <label htmlFor="password" className="mb-2">

@@ -32,20 +32,34 @@ const login = () => {
   }, [user]);
 
   const onLogin = async () => {
-    try {
-      const response = await axios.post("/api/users/login", user);
-      console.log("Login success", response.data);
-      //Added delay to the router push so notification would popup
-      toast.success("Login Successful", {
+    // Check for specific admin credentials
+    if (
+      user.email === "election@shangrila.gov.sr" &&
+      user.password === "shangrila2024$"
+    ) {
+      toast.success("Admin Login Successful", {
         onClose: () => {
           setTimeout(() => {
-            router.push("/voterdashboard");
+            router.push("/admin"); // Redirect to admin page
           }, 1500);
         },
       });
-    } catch (error: any) {
-      console.log("Login failed", error.message);
-      toast.error("Login failed please try again.");
+    } else {
+      // Normal user login process
+      try {
+        const response = await axios.post("/api/users/login", user);
+        console.log("Login success", response.data);
+        toast.success("Login Successful", {
+          onClose: () => {
+            setTimeout(() => {
+              router.push("/voterdashboard"); // Redirect to normal user dashboard
+            }, 1500);
+          },
+        });
+      } catch (error: any) {
+        console.log("Login failed", error.message);
+        toast.error("Login failed please try again.");
+      }
     }
   };
 

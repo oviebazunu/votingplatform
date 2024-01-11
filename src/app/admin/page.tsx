@@ -58,7 +58,7 @@ const AdminPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-8">
+    <div className="min-h-screen flex items-center justify-center p-8 ">
       <div className="flex flex-wrap justify-between space-x-4">
         <div className="flex-grow min-w-[300px] bg-white rounded-lg shadow-md p-10">
           <h2 className="text-2xl text-center font-bold mb-6">
@@ -73,14 +73,14 @@ const AdminPage = () => {
               {candidatesList.map((cand, index) => (
                 <li key={index} className="mb-2 border-b-2 pb-2">
                   <span className="font-semibold">{cand.name}</span> -
-                  <span> {cand.party}</span> - <span>{cand.votes}</span> -{" "}
+                  <span> {cand.party}</span> - <span>{cand.votes}</span> Votes -{" "}
                   <span>{cand.constituency}</span>
                 </li>
               ))}
             </ul>
           )}
         </div>
-        <div className="bg-white rounded-lg shadow-md md:w-[500px] md:h-[450px] w-full mt-[10px] py-[50px] px-10">
+        <div className="bg-white rounded-lg shadow-md md:w-[500px] md:h-[500px] w-full mt-[10px] py-[50px] px-10">
           <h2 className="text-2xl text-center font-bold mb-6">
             Candidate Registration
           </h2>
