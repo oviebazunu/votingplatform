@@ -10,7 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { QrReader } from "react-qr-reader";
+import QrReader from "react-qr-scanner";
 
 const Register = () => {
   const router = useRouter();
@@ -43,7 +43,9 @@ const Register = () => {
 
   const handleScan = (data) => {
     if (data) {
-      setUser({ ...user, uvc: data });
+      const scannedData = data.text ? data.text : data; // Fallback to data if data.text is not available
+
+      setUser({ ...user, uvc: scannedData });
       setShowQrReader(false);
     }
   };

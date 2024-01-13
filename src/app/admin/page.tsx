@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 
 const AdminPage = () => {
   const [candidate, setCandidate] = useState({
@@ -11,7 +12,7 @@ const AdminPage = () => {
     votes: 0,
     constituency: "",
   });
-
+  const router = useRouter();
   const [candidatesList, setCandidates] = useState([]); // State for candidates list
   const [loading, setLoading] = useState(true); // State for loading
   const [error, setError] = useState(null);
@@ -50,6 +51,22 @@ const AdminPage = () => {
     }
   };
 
+  const logout = async () => {
+    try {
+      axios.get("/api/users/logout");
+      toast.success("Logout successful", {
+        onClose: () => {
+          setTimeout(() => {
+            router.push("/");
+          }, 1500);
+        },
+      });
+    } catch (error: any) {
+      console.log(error.message);
+      toast.error("Error. Failed to logout.");
+    }
+  };
+
   useEffect(() => {
     fetchCandidates(); // Initial fetch
     const interval = setInterval(fetchCandidates, 5000); // Fetch every 5 seconds
@@ -59,8 +76,16 @@ const AdminPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-8 ">
+      <div className="fixed top-4 right-4">
+        <button
+          onClick={logout}
+          className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+        >
+          Logout
+        </button>
+      </div>
       <div className="flex flex-wrap justify-between space-x-4">
-        <div className="flex-grow min-w-[300px] bg-white rounded-lg shadow-md p-10">
+        <div className="flex-grow min-w-[250px] bg-white rounded-lg shadow-md p-10">
           <h2 className="text-2xl text-center font-bold mb-6">
             Current Candidates
           </h2>

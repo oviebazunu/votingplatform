@@ -33,8 +33,6 @@ export async function POST(request: NextRequest) {
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
 
-    const isAdmin = email === "election@shangrila.gov.sr";
-
     // Create a new user instance with hashed password
     const newUser = new User({
       email,
@@ -43,7 +41,6 @@ export async function POST(request: NextRequest) {
       password: hashedPassword,
       constituency,
       uvc,
-      isAdmin,
     });
 
     // Save the new user to the database

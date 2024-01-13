@@ -31,9 +31,10 @@ export async function POST(request: NextRequest) {
     //create token data
     const tokenData = {
       id: user._id,
-      username: user.username,
       email: user.email,
       isAdmin: user.isAdmin,
+      voted: user.voted,
+      constituency: user.constituency,
     };
 
     //create token
@@ -45,6 +46,29 @@ export async function POST(request: NextRequest) {
       message: "Login Sucessful",
       success: true,
       isAdmin: user.isAdmin,
+    });
+
+    if (user.isAdmin) {
+      response.cookies.set("isAdmin", "true", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+      });
+    }
+
+    // Set token cookie
+    response.cookies.set("token", token, { httpOnly: true });
+
+    // Set email cookie
+    response.cookies.set("email", user.email, {
+      secure: true,
+      sameSite: "strict",
+    });
+
+    //Set constituency cookie
+    response.cookies.set("constituency", user.constituency, {
+      secure: true,
+      sameSite: "strict",
     });
 
     response.cookies.set("token", token, { httpOnly: true });

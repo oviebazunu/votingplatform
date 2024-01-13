@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/models/candidatePartyModels.js", "src/models/candidatePartyModels.js", "src/models/candidatePartyModels.js", "src/dataInputter.js"  ],
   "exclude": [
     "node_modules"
   ]

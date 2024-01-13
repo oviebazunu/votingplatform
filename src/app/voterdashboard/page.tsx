@@ -3,20 +3,35 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const VoterDashboard = () => {
-  const [candidates, setCandidates] = useState({});
+  const router = useRouter();
+  const [candidates, setCandidates] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedParty, setSelectedParty] = useState("");
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [votedFor, setVotedFor] = useState(null);
+
+  const userConstituency = Cookies.get("constituency"); // Assuming user's constituency is stored in cookies
 
   useEffect(() => {
+    const isAdmin = Cookies.get("isAdmin") === "true";
+    if (isAdmin) {
+      router.push("/admin"); // Redirect to admin page
+      return;
+    }
+
     const fetchCandidates = async () => {
       try {
         const response = await axios.get("/api/users/candidateParty");
-        setCandidates(response.data);
+        const filteredCandidates = response.data.filter(
+          (candidate) => candidate.constituency === userConstituency
+        );
+        setCandidates(filteredCandidates);
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -25,7 +40,7 @@ const VoterDashboard = () => {
     };
 
     fetchCandidates();
-  }, []);
+  }, [router, userConstituency]);
 
   // Function to handle button click
   const handleButtonClick = (party: React.SetStateAction<string>) => {
@@ -44,17 +59,51 @@ const VoterDashboard = () => {
     }
 
     try {
-      // Replace with your actual API endpoint and request body
+      const userEmail = Cookies.get("email");
+      console.log("Sending Email:", userEmail);
+
+      if (!userEmail) {
+        toast.error("User email not found.");
+        return;
+      }
+
+      // Attempt to update the user's 'voted' status
+      await axios.post("/api/users/votes", { email: userEmail });
+
+      // If the user hasn't voted before, increment the candidate's vote count
       await axios.post("/api/users/candidateParty", {
         candidateId: selectedCandidate._id,
       });
 
-      setShowPopup(false);
+      setVotedFor(selectedCandidate.name);
 
+      setShowPopup(false);
       toast.success("Your vote has been registered!");
     } catch (error) {
-      setError(error.message);
-      toast.error("There has been an error when voting.");
+      if (error.response && error.response.status === 403) {
+        // Handle the scenario when the user has already voted
+        toast.error("You have already voted.");
+      } else {
+        // Handle other errors
+        setError(error.message);
+        toast.error("Error when voting");
+      }
+    }
+  };
+
+  const logout = async () => {
+    try {
+      axios.get("/api/users/logout");
+      toast.success("Logout successful", {
+        onClose: () => {
+          setTimeout(() => {
+            router.push("/");
+          }, 1500);
+        },
+      });
+    } catch (error: any) {
+      console.log(error.message);
+      toast.error("Error. Failed to logout.");
     }
   };
 
@@ -73,6 +122,7 @@ const VoterDashboard = () => {
     if (error) {
       return <div>Error: {error}</div>;
     }
+
     return (
       <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
         <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white text-center">
@@ -111,57 +161,77 @@ const VoterDashboard = () => {
 
   return (
     <div>
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="p-8 max-w-md mx-auto bg-white rounded-xl shadow-md flex flex-col items-center space-y-4">
-          <div className="flex flex-col items-center">
-            <h2 className="text-2xl font-medium text-black">
-              Candidate Party List
-            </h2>
-            <p className="text-gray-500">
-              Choose who you want to win? You only get one vote!
+      {/* Logout Button */}
+      <div className="fixed top-4 right-4">
+        <button
+          onClick={logout}
+          className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+        >
+          Logout
+        </button>
+      </div>
+
+      <div>
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <div className="p-8 max-w-md mx-auto bg-white rounded-xl shadow-md flex flex-col items-center space-y-4">
+            <div className="flex flex-col items-center">
+              <h2 className="text-2xl font-medium text-black">
+                Candidate Party List
+              </h2>
+              <p className="text-gray-500">
+                Choose who you want to win? You only get one vote!
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <button
+                onClick={() => handleButtonClick("Blue Party")}
+                className="p-6 bg-blue-500 text-white rounded-md text-xl"
+              >
+                Blue Party
+              </button>
+              <button
+                onClick={() => handleButtonClick("Red Party")}
+                className="p-6 bg-red-500 text-white rounded-md text-xl"
+              >
+                Red Party
+              </button>
+              <button
+                onClick={() => handleButtonClick("Yellow Party")}
+                className="p-6 bg-yellow-500 text-black rounded-md text-xl"
+              >
+                Yellow Party
+              </button>
+              <button
+                onClick={() => handleButtonClick("Independent")}
+                className="p-6 bg-gray-400 text-black rounded-md text-xl"
+              >
+                Independent
+              </button>
+            </div>
+          </div>
+          <CandidatePopup />
+        </div>
+        {/* Display the voted candidate */}
+        {votedFor && (
+          <div className="voted-info">
+            <p>
+              You have voted for: <strong>{votedFor}</strong>
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-4 text-center">
-            <button
-              onClick={() => handleButtonClick("Blue Party")}
-              className="p-6 bg-blue-500 text-white rounded-md text-xl"
-            >
-              Blue Party
-            </button>
-            <button
-              onClick={() => handleButtonClick("Red Party")}
-              className="p-6 bg-red-500 text-white rounded-md text-xl"
-            >
-              Red Party
-            </button>
-            <button
-              onClick={() => handleButtonClick("Yellow Party")}
-              className="p-6 bg-yellow-500 text-black rounded-md text-xl"
-            >
-              Yellow Party
-            </button>
-            <button
-              onClick={() => handleButtonClick("Independent")}
-              className="p-6 bg-gray-400 text-black rounded-md text-xl"
-            >
-              Independent
-            </button>
-          </div>
-        </div>
-        <CandidatePopup />
+        )}
+        <ToastContainer
+          position="top-right"
+          autoClose={1500}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover={false}
+          theme="light"
+        />
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={1500}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover={false}
-        theme="light"
-      />
     </div>
   );
 };

@@ -34,30 +34,22 @@ const login = () => {
   const onLogin = async () => {
     try {
       const response = await axios.post("/api/users/login", user);
-      console.log("Login success", response.data);
+      const isAdmin = response.data.isAdmin;
+      const successMessage = isAdmin
+        ? "Admin Login Successful"
+        : "Login Successful";
+      const redirectPath = isAdmin ? "/admin" : "/voterdashboard";
 
-      // Check if the user is an admin and redirect to admin dashboard
-      if (response.data.isAdmin) {
-        toast.success("Admin Login Successful", {
-          onClose: () => {
-            setTimeout(() => {
-              router.push("/admin");
-            }, 1500);
-          },
-        });
-      } else {
-        // Redirect to normal user dashboard added delay so notification pops up
-        toast.success("Login Successful", {
-          onClose: () => {
-            setTimeout(() => {
-              router.push("/voterdashboard");
-            }, 1500);
-          },
-        });
-      }
-    } catch (error: any) {
-      console.log("Login failed", error.message);
-      toast.error("Login failed please try again.");
+      // Display the toast message
+      toast.success(successMessage);
+
+      // Wait for 1500 ms and then redirect
+      setTimeout(() => {
+        router.push(redirectPath);
+      }, 1500);
+    } catch (error) {
+      console.log("Login failed", error.response?.data?.error || error.message);
+      toast.error("Login failed. Please try again.");
     }
   };
 
