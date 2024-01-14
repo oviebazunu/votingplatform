@@ -41,7 +41,7 @@ const Register = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const handleScan = (data) => {
+  const handleScan = (data: { text: any }) => {
     if (data) {
       const scannedData = data.text ? data.text : data; // Fallback to data if data.text is not available
 
@@ -50,7 +50,7 @@ const Register = () => {
     }
   };
 
-  const handleError = (err) => {
+  const handleError = (err: any) => {
     console.error(err);
   };
 
