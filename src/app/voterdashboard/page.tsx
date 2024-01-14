@@ -14,22 +14,31 @@ const VoterDashboard = () => {
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [votedFor, setVotedFor] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [votedFor, setVotedFor] = useState(() =>
+    localStorage.getItem("votedFor")
+  );
 
   const userConstituency = Cookies.get("constituency"); // Assuming user's constituency is stored in cookies
 
   useEffect(() => {
-    const isAdmin = Cookies.get("isAdmin") === "true";
-    if (isAdmin) {
-      router.push("/admin"); // Redirect to admin page
-      return;
-    }
+    const checkVotingStatus = async () => {
+      try {
+        const response = await axios.get("/api/users/getVotingStatus");
+        if (!response.data.votingEnabled && !isAdmin) {
+          router.push("/result");
+        }
+      } catch (error) {
+        console.error("Error fetching voting status:", error);
+      }
+    };
 
     const fetchCandidates = async () => {
       try {
         const response = await axios.get("/api/users/candidateParty");
         const filteredCandidates = response.data.filter(
-          (candidate) => candidate.constituency === userConstituency
+          (candidate: { constituency: string | undefined }) =>
+            candidate.constituency === userConstituency
         );
         setCandidates(filteredCandidates);
         setLoading(false);
@@ -40,7 +49,8 @@ const VoterDashboard = () => {
     };
 
     fetchCandidates();
-  }, [router, userConstituency]);
+    checkVotingStatus();
+  }, [router, userConstituency, isAdmin]);
 
   // Function to handle button click
   const handleButtonClick = (party: React.SetStateAction<string>) => {
@@ -77,6 +87,11 @@ const VoterDashboard = () => {
 
       setVotedFor(selectedCandidate.name);
 
+      if (selectedCandidate) {
+        localStorage.setItem("votedFor", selectedCandidate.name);
+        setVotedFor(selectedCandidate.name);
+      }
+
       setShowPopup(false);
       toast.success("Your vote has been registered!");
     } catch (error) {
@@ -94,6 +109,7 @@ const VoterDashboard = () => {
   const logout = async () => {
     try {
       axios.get("/api/users/logout");
+      localStorage.removeItem("votedFor");
       toast.success("Logout successful", {
         onClose: () => {
           setTimeout(() => {
@@ -208,17 +224,17 @@ const VoterDashboard = () => {
                 Independent
               </button>
             </div>
+            {/* Display the voted candidate */}
+            {votedFor && (
+              <div className="voted-info">
+                <p>
+                  You have voted for: <strong>{votedFor}</strong>
+                </p>
+              </div>
+            )}
           </div>
           <CandidatePopup />
         </div>
-        {/* Display the voted candidate */}
-        {votedFor && (
-          <div className="voted-info">
-            <p>
-              You have voted for: <strong>{votedFor}</strong>
-            </p>
-          </div>
-        )}
         <ToastContainer
           position="top-right"
           autoClose={1500}

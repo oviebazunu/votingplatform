@@ -107,10 +107,6 @@ const login = () => {
         </div>
         <div className="border-b-[2px] border-gray-500 mt-4 mb-4"></div>
         <div className="text-center text-[#465362] hover:underline hover:text-opacity-70 transition-all transition-[0.3s] ease-in-out">
-          Forgotten Password?
-        </div>
-        <div className="text-center">or</div>
-        <div className="text-center text-[#465362] hover:underline hover:text-opacity-70 transition-all transition-[0.3s] ease-in-out">
           <Link href="/register">Don't have an account? Register</Link>
         </div>
       </div>

@@ -4,6 +4,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const AdminPage = () => {
   const [candidate, setCandidate] = useState({
@@ -16,6 +17,7 @@ const AdminPage = () => {
   const [candidatesList, setCandidates] = useState([]); // State for candidates list
   const [loading, setLoading] = useState(true); // State for loading
   const [error, setError] = useState(null);
+  const [votingStatus, setVotingStatus] = useState(true); // true if voting is enabled, false otherwise
 
   // Function to update candidate details
   const updateCandidateDetails = (key: any, value: any) => {
@@ -51,6 +53,19 @@ const AdminPage = () => {
     }
   };
 
+  const handleToggleVoting = async () => {
+    try {
+      const response = await axios.post("/api/users/stopVoting");
+      if (response.status === 200) {
+        setVotingStatus(!votingStatus);
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error toggling voting:", error);
+      toast.error("Error occurred while toggling voting.");
+    }
+  };
+
   const logout = async () => {
     try {
       axios.get("/api/users/logout");
@@ -77,6 +92,13 @@ const AdminPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center p-8 ">
       <div className="fixed top-4 right-4">
+        <Link href={"/result"}>
+          <button
+            className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition duration-200 mr-4" // Adds margin to the right of the first button
+          >
+            Results
+          </button>
+        </Link>
         <button
           onClick={logout}
           className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
@@ -170,6 +192,14 @@ const AdminPage = () => {
             >
               Register Candidate
             </button>
+            <div className="p-2">
+              <button
+                onClick={handleToggleVoting}
+                className="md:w-[200px] md:h-[70px] w-[200px] h-[50px] bg-button font-bold rounded-[20px] shadow-lg mb-3 transition-colors duration-200 ease-in-out hover:bg-green-500 hover:bg-red-600 cursor-pointer"
+              >
+                {votingStatus ? "Stop Voting" : "Start Voting"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
