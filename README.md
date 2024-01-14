@@ -17,7 +17,6 @@ first as that is the file structure thank you for understanding.
 ```bash
 npm install
 npm run dev
-# or
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
