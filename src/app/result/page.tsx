@@ -6,12 +6,20 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 const Result = () => {
+  interface Winner {
+    name: string;
+    party: string;
+    // Add any other relevant properties of a winner
+  }
+
   const router = useRouter();
-  const [constituencyWinners, setConstituencyWinners] = useState({});
-  const [overallWinner, setOverallWinner] = useState(null);
+  const [constituencyWinners, setConstituencyWinners] = useState<{
+    [key: string]: Winner;
+  }>({});
+  const [overallWinner, setOverallWinner] = useState<Winner | null>(null);
+
   const [loading, setLoading] = useState(true);
   const [partyWins, setPartyWins] = useState({});
-  const [winningParty, setWinningParty] = useState("");
   const [electionResult, setElectionResult] = useState("");
 
   useEffect(() => {
@@ -37,7 +45,7 @@ const Result = () => {
     candidates.forEach(
       (candidate: {
         votes: number;
-        constituency: unknown;
+        constituency: string;
         party: string | number;
       }) => {
         if (candidate.votes > maxVotes) {
@@ -99,7 +107,7 @@ const Result = () => {
           }, 1500);
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.message);
       toast.error("Error. Failed to logout.");
     }

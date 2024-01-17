@@ -7,6 +7,13 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const AdminPage = () => {
+  interface Candidate {
+    name: string;
+    party: string;
+    votes: number;
+    constituency: string;
+  }
+
   const [candidate, setCandidate] = useState({
     name: "",
     party: "",
@@ -14,7 +21,7 @@ const AdminPage = () => {
     constituency: "",
   });
   const router = useRouter();
-  const [candidatesList, setCandidates] = useState([]); // State for candidates list
+  const [candidatesList, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(true); // State for loading
   const [error, setError] = useState(null);
   const [votingStatus, setVotingStatus] = useState(true); // true if voting is enabled, false otherwise
@@ -49,7 +56,7 @@ const AdminPage = () => {
       const response = await axios.get("/api/users/candidateParty");
       setCandidates(response.data);
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message);
       setLoading(false);
     }
