@@ -23,7 +23,7 @@ const VoterDashboard = () => {
   const [error, setError] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [votedFor, setVotedFor] = useState(() =>
-    localStorage.getItem("votedFor")
+    typeof window !== "undefined" ? localStorage.getItem("votedFor") : null
   );
 
   const userConstituency = Cookies.get("constituency"); // Assuming user's constituency is stored in cookies
@@ -116,7 +116,9 @@ const VoterDashboard = () => {
   const logout = async () => {
     try {
       axios.get("/api/users/logout");
-      localStorage.removeItem("votedFor");
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("votedFor");
+      }
       toast.success("Logout successful", {
         onClose: () => {
           setTimeout(() => {
