@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       { constituency: constituency, result },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error in GET:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

@@ -7,11 +7,18 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
 const VoterDashboard = () => {
+  interface Candidate {
+    _id: string;
+    name: string;
+  }
+
   const router = useRouter();
   const [candidates, setCandidates] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedParty, setSelectedParty] = useState("");
-  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -42,7 +49,7 @@ const VoterDashboard = () => {
         );
         setCandidates(filteredCandidates);
         setLoading(false);
-      } catch (error) {
+      } catch (error: any) {
         setError(error.message);
         setLoading(false);
       }
@@ -94,7 +101,7 @@ const VoterDashboard = () => {
 
       setShowPopup(false);
       toast.success("Your vote has been registered!");
-    } catch (error) {
+    } catch (error: any) {
       if (error.response && error.response.status === 403) {
         // Handle the scenario when the user has already voted
         toast.error("You have already voted.");
