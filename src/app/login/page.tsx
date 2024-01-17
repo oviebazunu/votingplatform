@@ -48,8 +48,13 @@ const Login = () => {
         router.push(redirectPath);
       }, 1500);
     } catch (error) {
-      console.log("Login failed", error.response?.data?.error || error.message);
-      toast.error("Login failed. Please try again.");
+      if (axios.isAxiosError(error)) {
+        console.log(
+          "Login failed",
+          error.response?.data?.error || error.message
+        );
+        toast.error("Login failed. Please try again.");
+      }
     }
   };
 

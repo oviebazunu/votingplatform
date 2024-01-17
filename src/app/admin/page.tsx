@@ -31,13 +31,15 @@ const AdminPage = () => {
       toast.success("Candidate is registered");
       console.log("Candidate Registered:", response.data);
     } catch (error) {
-      if (error.response) {
-        console.error("Registration Error:", error.response.data);
-        toast.error("Error when adding candidate");
-      } else if (error.request) {
-        console.error("No response received:", error.request);
-      } else {
-        console.error("Error:", error.message);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          console.error("Registration Error:", error.response.data);
+          toast.error("Error when adding candidate");
+        } else if (error.request) {
+          console.error("No response received:", error.request);
+        } else {
+          console.error("Error:", error.message);
+        }
       }
     }
   };
