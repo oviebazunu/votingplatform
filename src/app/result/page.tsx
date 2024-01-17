@@ -35,7 +35,7 @@ const Result = () => {
   const [overallWinner, setOverallWinner] = useState<Winner | null>(null);
 
   const [loading, setLoading] = useState(true);
-  const [partyWins, setPartyWins] = useState({});
+  const [partyWins, setPartyWins] = useState<PartyWins>({});
   const [electionResult, setElectionResult] = useState("");
 
   useEffect(() => {
@@ -59,7 +59,12 @@ const Result = () => {
     let totalConstituencies = new Set();
 
     candidates.forEach(
-      (candidate: { votes: number; constituency: string; party: string }) => {
+      (candidate: {
+        votes: number;
+        constituency: string;
+        party: string;
+        name: string;
+      }) => {
         if (candidate.votes > maxVotes) {
           maxVotes = candidate.votes;
           overallWinnerCandidate = candidate;
