@@ -10,7 +10,13 @@ When testing endpoints for Question 2 please type in:
 localhost:300/api/
 ```
 
-first as that is the file structure thank you for understanding.
+first as that is the file structure.
+
+When installing make sure it is typscript as all my files follow .tsx
+
+All important keys are in the .env file.
+
+Thank you for understanding.
 
 ## Getting Started
 

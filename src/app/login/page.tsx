@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
-const login = () => {
+const Login = () => {
   const router = useRouter();
   const [user, setUser] = React.useState({
     email: "",
@@ -126,4 +126,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;

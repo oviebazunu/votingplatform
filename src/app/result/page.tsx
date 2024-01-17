@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-const result = () => {
+const Result = () => {
   const router = useRouter();
   const [constituencyWinners, setConstituencyWinners] = useState({});
   const [overallWinner, setOverallWinner] = useState(null);
@@ -172,4 +172,4 @@ const result = () => {
   );
 };
 
-export default result;
+export default Result;
