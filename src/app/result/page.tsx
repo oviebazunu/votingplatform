@@ -12,10 +12,26 @@ const Result = () => {
     // Add any other relevant properties of a winner
   }
 
+  interface Winner {
+    name: string;
+    party: string;
+    votes: number;
+    constituency: string;
+  }
+
+  type Winners = {
+    [key: string]: Winner;
+  };
+
+  type PartyWins = {
+    [key: string]: number;
+  };
+
   const router = useRouter();
   const [constituencyWinners, setConstituencyWinners] = useState<{
     [key: string]: Winner;
   }>({});
+
   const [overallWinner, setOverallWinner] = useState<Winner | null>(null);
 
   const [loading, setLoading] = useState(true);
@@ -36,18 +52,14 @@ const Result = () => {
   }, []);
 
   const processElectionResults = (candidates: any[]) => {
-    let winners = {};
+    let winners: Winners = {};
     let maxVotes = 0;
     let overallWinnerCandidate = null;
-    let partyWins = {};
+    let partyWins: PartyWins = {};
     let totalConstituencies = new Set();
 
     candidates.forEach(
-      (candidate: {
-        votes: number;
-        constituency: string;
-        party: string | number;
-      }) => {
+      (candidate: { votes: number; constituency: string; party: string }) => {
         if (candidate.votes > maxVotes) {
           maxVotes = candidate.votes;
           overallWinnerCandidate = candidate;
